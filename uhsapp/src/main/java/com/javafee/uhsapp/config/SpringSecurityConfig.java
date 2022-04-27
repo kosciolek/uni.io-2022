@@ -2,7 +2,7 @@ package com.javafee.uhsapp.config;
 
 import com.auth0.jwk.JwkProvider;
 import com.auth0.jwk.JwkProviderBuilder;
-import com.javafee.uhsapp.controller.web.LogoutController;
+import com.javafee.uhsapp.controller.web.LogoutHandler;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import com.auth0.AuthenticationController;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
@@ -20,38 +20,24 @@ import java.io.UnsupportedEncodingException;
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
-	@Value(value = "${com.auth0.domain}")
-	private String domain;
 
-	@Value(value = "${com.auth0.clientId}")
-	private String clientId;
-
-	@Value(value = "${com.auth0.clientSecret}")
-	private String clientSecret;
+	private final LogoutHandler logoutHandler;
 
 
-	@Bean
-	public AuthenticationController authenticationController(){
-		JwkProvider jwkProvider = new JwkProviderBuilder(domain).build();
-		return AuthenticationController.newBuilder(domain, clientId, clientSecret)
-				.withJwkProvider(jwkProvider)
-				.build();
-	}
-
-	@Bean
-	public LogoutSuccessHandler logoutSuccessHandler() {
-		return new LogoutController();
+	public SpringSecurityConfig(LogoutHandler logoutHandler){
+		this.logoutHandler = logoutHandler;
 	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable().authorizeRequests()
-				.antMatchers("/callback", "/login", "/").permitAll()
+				.antMatchers("/", "/login", "/callback").permitAll()
 				.anyRequest().authenticated()
+				.and().oauth2Login()
 				.and()
 				.logout()
-				.logoutSuccessHandler(logoutSuccessHandler())
-				.permitAll();
+				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+				.addLogoutHandler(logoutHandler);
 	}
 
 	public String getContextPath(HttpServletRequest request) {
