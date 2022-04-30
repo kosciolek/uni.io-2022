@@ -1,12 +1,8 @@
 package com.javafee.uhsapp.controller.web;
 
-import com.javafee.uhsapp.config.SpringSecurityConfig;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 
@@ -21,13 +17,13 @@ import lombok.extern.java.Log;
 @Log
 public class LogoutHandler extends SecurityContextLogoutHandler {
 
-    @Value(value = "${com.auth0.domain}")
+    @Value(value = "${spring.security.oauth2.client.registration.auth0.domain}")
     private String domain;
 
-    @Value(value = "${com.auth0.clientId}")
+    @Value(value = "${spring.security.oauth2.client.registration.auth0.client-id}")
     private String clientId;
 
-    @Value(value = "${com.auth0.clientSecret}")
+    @Value(value = "${spring.security.oauth2.client.registration.auth0.client-secret}")
     private String clientSecret;
 
 
@@ -45,6 +41,8 @@ public class LogoutHandler extends SecurityContextLogoutHandler {
                 getDomain(),
                 getClientId(),
                 returnTo);
+        // https://dev-qmx75p4q.us.auth0.com/v2/logout?client_id=$%7Bspring.security.oauth2.client.registration.auth0.client-id&returnTo=http://localhost:3000/
+        // https://dev-qmx75p4q.us.auth0.com/v2/logout?client_id=$%7Bspring.security.oauth2.client.registration.auth0.client-id&returnTo=http://localhost:3000/
         try {
             response.sendRedirect(logoutUrl);
         } catch (IOException e) {

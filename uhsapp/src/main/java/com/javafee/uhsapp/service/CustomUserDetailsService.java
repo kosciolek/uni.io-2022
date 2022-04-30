@@ -10,5 +10,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public interface CustomUserDetailsService extends UserDetailsService {
 	UserDetails loadUserByUsername(String login);
 
-	void createUser(String login, String password) throws NoSuchAlgorithmException, LoginException;
+	void createUser(String login) throws NoSuchAlgorithmException, LoginException;
+
 }

@@ -3,7 +3,6 @@ package com.javafee.uhsapp.model.domain;
 import java.util.Collection;
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,9 +27,7 @@ public class UserData implements UserDetails {
 	private Integer id;
 	private String login;
 	private String password;
-	private String salt;
-	@Column(name = "is_Authorized")
-	private boolean isAuthorized;
+
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
