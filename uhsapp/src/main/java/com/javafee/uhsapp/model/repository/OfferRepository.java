@@ -9,4 +9,6 @@ import com.javafee.uhsapp.model.domain.Offer;
 public interface OfferRepository extends JpaRepository<Offer, Integer> {
 	List<Offer> findAllByUserData_Id(Integer userId);
 
+	List<Offer> findAllByUserData_IdAndTitleContains(Integer userId, String offerTitle);
+
 }

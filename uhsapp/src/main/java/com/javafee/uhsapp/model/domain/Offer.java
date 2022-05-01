@@ -28,6 +28,16 @@ public class Offer {
 	private String startDate;
 	@Column(name = "end_date")
 	private String endDate;
+	@Column(name = "issuance_date")
+	private String issuanceDate;
+	private String description;
+	@Column(name = "phone_number")
+	private String phoneNumber;
+	private String email;
+	private EnumCategory category;
+	private boolean needy;
+	private boolean finished;
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_user_data")
 	private UserData userData;

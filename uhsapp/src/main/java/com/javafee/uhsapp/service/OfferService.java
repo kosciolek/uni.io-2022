@@ -12,8 +12,8 @@ public interface OfferService {
 
     Offer getById(Integer offerId);
 
-    void delete(Offer offer, Integer offerId);
+    void delete(Integer offerId);
 
-    List<Offer> findAllByUserIdAndOfferTitle(Integer userId, String offerTitle);
+    List<Offer> findAllByUserIdAndTitle(Integer userId, String offerTitle);
 
 }
