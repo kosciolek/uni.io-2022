@@ -1,8 +1,8 @@
 package com.javafee.uhsapp.controller.web;
 
-import com.javafee.uhsapp.model.domain.Offer;
+import com.javafee.uhsapp.model.domain.Post;
 import com.javafee.uhsapp.model.domain.UserData;
-import com.javafee.uhsapp.service.OfferService;
+import com.javafee.uhsapp.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,14 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/offer")
 @RequiredArgsConstructor
-public class OfferController {
-    private final OfferService offerService;
+public class PostController {
+    private final PostService offerService;
 
     @PostMapping("/save")
-    public String save(@RequestBody Offer offer){
-        offerService.save(offer, ((UserData) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId());
+    public String save(@RequestBody Post post){
+        offerService.save(post, ((UserData) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId());
         // TODO: handle redirect or sth
         return "Offer added @146";
     }
-
 }
