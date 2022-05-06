@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Data
@@ -28,14 +29,13 @@ public class Post {
 	private PostType type;
 	private boolean finished;
 	@Column(name = "creation_date")
-	private long creationDate;
+	private Timestamp creationDate;
 	private String description;
 	@Column(name = "shortDescription")
 	private String shortDescription;
 	@Column(name = "end_date")
 	private long endDate;
-	@OneToMany(mappedBy = "post",
-			cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "post")
 	private List<Comment> comments;
 
 

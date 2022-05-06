@@ -21,41 +21,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Entity
-public class UserData implements UserDetails {
+public class UserData {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String login;
-	private String password;
-
-
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return List.of(() -> "read");
-	}
-
-	@Override
-	public String getUsername() {
-		return login;
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return true;
-	}
+	private String name;
 }
