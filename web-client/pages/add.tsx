@@ -14,13 +14,10 @@ import { NextPage } from "next";
 const Add: NextPage = () => (
   <Container>
     <Typography variant="h3">Dodaj ogłoszenie</Typography>
-
     <form>
       <Stack spacing={2}>
         <TextField variant="filled" label="Tytuł" />
-
         <TextField multiline variant="filled" label="Krótki opis" fullWidth />
-
         <FormControl fullWidth>
           <InputLabel id="category-label">Kategoria</InputLabel>
           <Select

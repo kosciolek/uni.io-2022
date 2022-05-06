@@ -18,6 +18,7 @@ import {
   Link as MuiLink,
 } from "@mui/material";
 import type { NextPage } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 import ky from "ky-universal";
@@ -25,48 +26,39 @@ import { useQuery } from "react-query";
 import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { api } from "../api";
+import { Layout } from "../components/layout";
 
 const Home: NextPage = () => {
   return (
-    <>
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
-          <Container>
-            <Toolbar>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                Super ogłoszenia 101
-              </Typography>
-            </Toolbar>
-          </Container>
-        </AppBar>
-      </Box>
-      <Container>
-        <Box maxWidth={500} mx={"auto"} mt={6}>
-          <Paper>
-            <Box p={4}>
-              <form>
-                <Stack spacing={2}>
-                  <Typography variant="h1" fontSize="26px">
-                    Logowanie
-                  </Typography>
-                  <TextField variant="standard" label="Email" />
-                  <TextField variant="standard" label="Hasło" type="password" />
-                  <div>
-                    <Typography component="span" variant="body2">
-                      Nie masz konta?
-                    </Typography>{" "}
-                    <Link href="/signup" passHref>
-                      <MuiLink variant="body2">Zarejestruj się.</MuiLink>
-                    </Link>
-                  </div>
-                  <Button>Zaloguj się</Button>
-                </Stack>
-              </form>
+    <Layout>
+      <Box maxWidth={500} mx={"auto"} mt={12}>
+        <Paper elevation={2}>
+          <Box p={4}>
+            <Box display="flex" justifyContent="center" my={2}>
+              <Image height={125} width={125} src="/helping.png" />
             </Box>
-          </Paper>
-        </Box>
-      </Container>
-    </>
+            <form>
+              <Stack spacing={2}>
+                <Typography variant="h1" fontSize="26px">
+                  Logowanie
+                </Typography>
+                <TextField variant="standard" label="Email" />
+                <TextField variant="standard" label="Hasło" type="password" />
+                <div>
+                  <Typography component="span" variant="body2">
+                    Nie masz konta?
+                  </Typography>{" "}
+                  <Link href="/signup" passHref>
+                    <MuiLink variant="body2">Zarejestruj się.</MuiLink>
+                  </Link>
+                </div>
+                <Button>Zaloguj się</Button>
+              </Stack>
+            </form>
+          </Box>
+        </Paper>
+      </Box>
+    </Layout>
   );
 };
 

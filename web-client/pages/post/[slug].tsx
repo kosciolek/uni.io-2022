@@ -9,34 +9,109 @@ import {
   Toolbar,
   Typography,
   Button,
+  Grid,
+  Stack,
+  Chip,
+  Divider,
 } from "@mui/material";
+import { GetPostResponse } from "../../dto/types";
+import { formatCategory, formatPostType } from "../../utils";
+import { Comment } from "../../components/comment";
+import { Layout } from "../../components/layout";
 
 function Posts({ id }: { id: string }) {
-  const { data } = useQuery(["post", id], () =>
+  const { data: post } = useQuery(["post", id], () =>
     api.get(`post/${id}`).json<GetPostResponse>()
   );
 
-  console.log(data);
+  if (!post) return null;
 
   return (
-    <>
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
-          <Container>
-            <Toolbar>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                Super ogłoszenia 101
+    <Layout>
+      <Typography my={3} variant="h1" fontSize="36px" gutterBottom>
+        {post.title}
+      </Typography>
+
+      <Grid container spacing={4}>
+        <Grid item lg={8}>
+          <Typography variant="body2" gutterBottom>
+            {post.shortDescription}
+          </Typography>
+          <Box my={3}>
+            <Divider />
+          </Box>
+          {post.description}
+
+          <Box my={3}>
+            <Typography variant="h3" fontSize="24px">
+              Komentarze - {post.comments.length}
+            </Typography>
+            <Stack spacing={2} my={2}>
+              {post.comments.map((comment) => (
+                <Comment
+                  author={comment.author}
+                  body={comment.body}
+                  date={comment.date}
+                  id={comment.id}
+                  key={comment.id}
+                />
+              ))}
+            </Stack>
+          </Box>
+        </Grid>
+        <Grid item lg={4}>
+          <Stack spacing={2}>
+            <div>
+              <Typography variant="body2" gutterBottom>
+                Typ ogłoszenia
               </Typography>
-              <Button color="inherit">Zaloguj się</Button>
-              <Button color="inherit">Zarejestruj się</Button>
-            </Toolbar>
-          </Container>
-        </AppBar>
-      </Box>
-      <Container>
-        <Box my={2}>{JSON.stringify(data, null, 2)}</Box>
-      </Container>
-    </>
+              <Typography>{formatPostType(post.type)}</Typography>
+            </div>
+            <Divider />
+            <div>
+              <Typography variant="body2">Autor</Typography>
+              <Typography>{post.author}</Typography>
+            </div>
+            <Divider />
+            <div>
+              <Typography variant="body2" gutterBottom>
+                Kategoria
+              </Typography>
+              <Chip
+                size="small"
+                color="primary"
+                label={formatCategory(post.category)}
+              />
+            </div>
+            <Divider />
+            <div>
+              <Typography variant="body2" gutterBottom>
+                Status
+              </Typography>
+              <Typography>
+                {post.finished ? "Aktywne" : "Zakończone"}
+              </Typography>
+            </div>
+            <Divider />
+            <div>
+              <Typography variant="body2" gutterBottom>
+                Data utworzenia
+              </Typography>
+              <Typography>
+                {new Date(post.creationDate).toLocaleString()}
+              </Typography>
+            </div>
+            <Divider />
+            <div>
+              <Typography variant="body2" gutterBottom>
+                Telefon
+              </Typography>
+              <Typography>{post.phone}</Typography>
+            </div>
+          </Stack>
+        </Grid>
+      </Grid>
+    </Layout>
   );
 }
 

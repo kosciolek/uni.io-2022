@@ -9,7 +9,6 @@ import {
   CardHeader,
   Container,
   Grid,
-  IconButton,
   TextField,
   Toolbar,
   Typography,
@@ -21,21 +20,24 @@ import { useQuery } from "react-query";
 import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { api } from "../api";
+import { Category, GetPostsResponse } from "../dto/types";
+import { formatCategory } from "../utils";
+import { Layout } from "../components/layout";
 
 export interface PostProps {
   id: number;
   title: string;
   author: string;
   body: string;
-  category: string;
+  category: Category;
 }
 
 const Post = ({ id, title, author, body, category }: PostProps) => (
   <Card>
     <CardHeader
-      avatar={<Avatar sx={{ bgcolor: red[500] }}>R</Avatar>}
+      avatar={<Avatar sx={{ bgcolor: red[500] }}>{author[0]}</Avatar>}
       title={title}
-      subheader={`${author} - ${category}`}
+      subheader={`${author} • ${formatCategory(category)}`}
     />
     <CardContent>
       <Typography variant="body2" color="text.secondary">
@@ -51,47 +53,32 @@ const Post = ({ id, title, author, body, category }: PostProps) => (
 );
 
 const Home: NextPage = () => {
-  const { data } = useQuery("post", () => api.get("post").json());
+  const { data } = useQuery("post", () =>
+    api.get("post").json<GetPostsResponse>()
+  );
 
   return (
-    <>
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
-          <Container>
-            <Toolbar>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                Super ogłoszenia 101
-              </Typography>
-              <Button href="/login" color="inherit">
-                Zaloguj się
-              </Button>
-              <Button color="inherit">Zarejestruj się</Button>
-            </Toolbar>
-          </Container>
-        </AppBar>
+    <Layout>
+      <Box my={2}>{JSON.stringify(data, null, 2)}</Box>
+      <Box my={2}>
+        <TextField variant="standard" label="Title" />
       </Box>
-      <Container>
-        <Box my={2}>{JSON.stringify(data, null, 2)}</Box>
-        <Box my={2}>
-          <TextField variant="standard" label="Title" />
-        </Box>
-        <div>
-          <Grid container spacing={2}>
-            {data?.map((post) => (
-              <Grid item sm={12} md={6} lg={4} key={post.id}>
-                <Post
-                  id={post.id}
-                  author={post.author}
-                  category={post.category}
-                  body={post.shortDescription}
-                  title={post.title}
-                />
-              </Grid>
-            ))}
-          </Grid>
-        </div>
-      </Container>
-    </>
+      <div>
+        <Grid container spacing={2}>
+          {data?.map((post) => (
+            <Grid item sm={12} md={6} lg={4} key={post.id}>
+              <Post
+                id={post.id}
+                author={post.author}
+                category={post.category}
+                body={post.shortDescription}
+                title={post.title}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      </div>
+    </Layout>
   );
 };
 
