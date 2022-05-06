@@ -24,16 +24,16 @@ interface Post {
   comments: Comment[];
 }
 
-type GetPosts = Omit<
+type GetPostsResponse = Omit<
   Post,
   "phone" | "email" | "address" | "description" | "comments"
 >[];
 
-type GetPost = Post;
-type CreatePost = Omit<Post, "creationDate" | "comments" | "author">;
-type UpdatePost = Omit<Post, "creationDate" | "comments" | "author">;
+type GetPostResponse = Post;
+type CreatePostRequest = Omit<Post, "creationDate" | "comments" | "author">;
+type UpdatePostRequest = Omit<Post, "creationDate" | "comments" | "author">;
 
-type CreateComment = {
+type CreateCommentRequest = {
   postId: number;
   body: string;
 };

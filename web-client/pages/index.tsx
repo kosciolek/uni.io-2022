@@ -15,41 +15,43 @@ import {
   Typography,
 } from "@mui/material";
 import type { NextPage } from "next";
-import { useState } from "react";
+import Link from "next/link";
 import ky from "ky-universal";
 import { useQuery } from "react-query";
 import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import { api } from "../api";
 
-export const api = ky.create({
-  prefixUrl: "/api",
-});
+export interface PostProps {
+  id: number;
+  title: string;
+  author: string;
+  body: string;
+  category: string;
+}
 
-const Post = () => (
+const Post = ({ id, title, author, body, category }: PostProps) => (
   <Card>
     <CardHeader
       avatar={<Avatar sx={{ bgcolor: red[500] }}>R</Avatar>}
-      title="Cooking classes"
-      subheader="September 14, 2016"
+      title={title}
+      subheader={`${author} - ${category}`}
     />
     <CardContent>
       <Typography variant="body2" color="text.secondary">
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Velit in quasi
-        tempora obcaecati magni corporis? Quod eligendi sunt eum dolore modi.
-        Incidunt dolore eveniet enim repellendus odio, ipsum quia placeat!
+        {body}
       </Typography>
     </CardContent>
     <CardActions disableSpacing>
-      <IconButton>
-        <FavoriteIcon />
-      </IconButton>
-      <Button sx={{ marginLeft: "auto" }}>Read more</Button>
+      <Link href={`/post/${id}`} passHref>
+        <Button sx={{ marginLeft: "auto" }}>Więcej...</Button>
+      </Link>
     </CardActions>
   </Card>
 );
 
 const Home: NextPage = () => {
-  const { data } = useQuery("posts", () => api.get("posts").json());
+  const { data } = useQuery("post", () => api.get("post").json());
 
   return (
     <>
@@ -58,9 +60,11 @@ const Home: NextPage = () => {
           <Container>
             <Toolbar>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                Stuff
+                Super ogłoszenia 101
               </Typography>
-              <Button color="inherit">Zaloguj się</Button>
+              <Button href="/login" color="inherit">
+                Zaloguj się
+              </Button>
               <Button color="inherit">Zarejestruj się</Button>
             </Toolbar>
           </Container>
@@ -72,19 +76,18 @@ const Home: NextPage = () => {
           <TextField variant="standard" label="Title" />
         </Box>
         <div>
-          <Grid container rowSpacing={2} columnSpacing={2}>
-            <Grid item xs={4}>
-              <Post />
-            </Grid>
-            <Grid item xs={4}>
-              <Post />
-            </Grid>
-            <Grid item xs={4}>
-              <Post />
-            </Grid>
-            <Grid item xs={4}>
-              <Post />
-            </Grid>
+          <Grid container spacing={2}>
+            {data?.map((post) => (
+              <Grid item sm={12} md={6} lg={4} key={post.id}>
+                <Post
+                  id={post.id}
+                  author={post.author}
+                  category={post.category}
+                  body={post.shortDescription}
+                  title={post.title}
+                />
+              </Grid>
+            ))}
           </Grid>
         </div>
       </Container>
