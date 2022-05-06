@@ -9,4 +9,4 @@ const categoryMap: Record<Category, string> = {
 export const formatCategory = (category: Category) => categoryMap[category];
 
 export const formatPostType = (postType: PostType) =>
-  postType === "needs" ? "Potrzebuje" : "Oferuje";
+  postType === "needs" ? "Potrzebuję" : "Oferuję";

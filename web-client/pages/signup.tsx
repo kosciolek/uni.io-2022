@@ -39,18 +39,23 @@ const Home: NextPage = () => {
           <form>
             <Stack spacing={2}>
               <Typography variant="h1" fontSize="26px">
-                Logowanie
+                Rejestracja
               </Typography>
               <TextField variant="standard" label="Email" />
               <TextField variant="standard" label="Hasło" type="password" />
-              <Button>Zaloguj się</Button>
+              <TextField
+                variant="standard"
+                label="Potwórz hasło"
+                type="password"
+              />
+              <Button>Zarejestruj się</Button>
 
               <Box textAlign="center">
                 <Typography component="span" variant="body2">
-                  Nie masz konta?
+                  Masz już konta?
                 </Typography>{" "}
-                <Link href="/signup" passHref>
-                  <MuiLink variant="body2">Zarejestruj się.</MuiLink>
+                <Link href="/login" passHref>
+                  <MuiLink variant="body2">Zaloguj się.</MuiLink>
                 </Link>
               </Box>
             </Stack>

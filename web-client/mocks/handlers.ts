@@ -41,7 +41,7 @@ const posts: GetPostsResponse = [
     category: "accomodation",
     creationDate: Date.now() - 12313432,
     finished: false,
-    id: 2,
+    id: 1232,
     shortDescription:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.",
     title: "Mieszkanie",
@@ -52,7 +52,7 @@ const posts: GetPostsResponse = [
     category: "food",
     creationDate: Date.now() - 123134,
     finished: false,
-    id: 1,
+    id: 4,
     shortDescription:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.",
     title: "Lekcje gotowania",
@@ -63,7 +63,7 @@ const posts: GetPostsResponse = [
     category: "accomodation",
     creationDate: Date.now() - 12313432,
     finished: false,
-    id: 2,
+    id: 5,
     shortDescription:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.",
     title: "Mieszkanie",
@@ -74,7 +74,7 @@ const posts: GetPostsResponse = [
     category: "food",
     creationDate: Date.now() - 123134,
     finished: false,
-    id: 3,
+    id: 6,
     shortDescription:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.",
     title: "Praca jakaś tam",
