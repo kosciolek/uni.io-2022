@@ -1,6 +1,7 @@
 package com.javafee.uhsapp.model.domain;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,20 +22,25 @@ public class Post {
 	private Integer id;
 	private String author;
 	private Category category;
+	@NotNull
 	@Column(name = "phone_number")
 	private String phoneNumber;
 	private String email;
+	@NotNull
 	private String address;
+	@NotNull
 	private String title;
 	private PostType type;
 	private boolean finished;
 	@Column(name = "creation_date")
 	private Timestamp creationDate;
+	@NotNull
 	private String description;
+	@NotNull
 	@Column(name = "shortDescription")
 	private String shortDescription;
 	@Column(name = "end_date")
-	private long endDate;
+	private Timestamp endDate;
 	@OneToMany(mappedBy = "post")
 	private List<Comment> comments;
 

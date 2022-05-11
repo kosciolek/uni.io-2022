@@ -4,14 +4,14 @@ import com.javafee.uhsapp.model.domain.Post;
 import com.javafee.uhsapp.model.repository.PostRepository;
 import com.javafee.uhsapp.model.repository.UserDataRepository;
 import com.javafee.uhsapp.service.PostService;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 @Service
@@ -22,8 +22,8 @@ public class PostServiceImpl implements PostService {
     private final UserDataRepository userDataRepository;
 
     @Override
-    public List<Post> findAllByUserId(Integer userId) {
-        return postRepository.findAllByUserData_Id(userId);
+    public Page<Post> findAllByUserId(Integer userId, Pageable pageable) {
+        return postRepository.findAllByUserData_Id(userId, pageable);
     }
 
 
@@ -58,8 +58,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> findAllByUserIdAndTitle(Integer userId, String postTitle) {
-        return postRepository.findAllByUserData_IdAndTitleContains(userId, postTitle);
+    public Page<Post> findAllByUserIdAndTitle(Integer userId, String postTitle, Pageable pageable) {
+        return postRepository.findAllByUserData_IdAndTitleContains(userId, postTitle, pageable);
     }
 
     @Override
