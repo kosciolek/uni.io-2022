@@ -4,16 +4,20 @@ import com.javafee.uhsapp.model.domain.Post;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 public interface PostService {
 
-    List<Post> findAllByUserId(Integer userId);
+    Page<Post> findAllByUserId(Integer userId, Pageable pageable);
 
-    void save(Post post, Integer userId);
+    void save(Post post, String login);
 
     Post getById(Integer postId);
 
     void delete(Integer postId);
 
-    List<Post> findAllByUserIdAndTitle(Integer userId, String postTitle);
+    Page<Post> findAllByUserIdAndTitle(Integer userId, String postTitle, Pageable pageable);
 
+    List<Post> findAll();
 }

@@ -33,7 +33,7 @@ public class CustomOidcUserService extends OidcUserService {
         UserOAuth2Info userOAuth2Info = new UserOAuth2Info(oidcUser.getAttributes());
 
         try {
-            userDetailsService.createUser(userOAuth2Info.getEmail());
+            userDetailsService.createUser(userOAuth2Info.getEmail(), userOAuth2Info.getName());
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             // TODO: handle redirect or sth

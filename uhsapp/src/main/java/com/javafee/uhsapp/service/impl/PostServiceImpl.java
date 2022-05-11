@@ -4,11 +4,14 @@ import com.javafee.uhsapp.model.domain.Post;
 import com.javafee.uhsapp.model.repository.PostRepository;
 import com.javafee.uhsapp.model.repository.UserDataRepository;
 import com.javafee.uhsapp.service.PostService;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
-import java.util.GregorianCalendar;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Service
@@ -19,17 +22,23 @@ public class PostServiceImpl implements PostService {
     private final UserDataRepository userDataRepository;
 
     @Override
-    public List<Post> findAllByUserId(Integer userId) {
-        return postRepository.findAllByUserData_Id(userId);
+    public Page<Post> findAllByUserId(Integer userId, Pageable pageable) {
+        return postRepository.findAllByUserData_Id(userId, pageable);
     }
 
+
     @Override
-    public void save(Post post, Integer userId) {
-        post.setUserData(userDataRepository.getById(userId));
+    public void save(Post post, String login) {
+        post.setUserData((userDataRepository.findByLogin(login)));
         postRepository.save(
                 Post.builder()
+                        .userData(post.getUserData())
                         .category(post.getCategory())
+                        .creationDate(new Timestamp(System.currentTimeMillis()))
                         .description(post.getDescription())
+                        .shortDescription(post.getShortDescription())
+                        .address(post.getAddress())
+                        .author(post.getUserData().getName())
                         .email(post.getUserData().getLogin())
                         .endDate(post.getEndDate())
                         .finished(false)
@@ -49,7 +58,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> findAllByUserIdAndTitle(Integer userId, String postTitle) {
-        return postRepository.findAllByUserData_IdAndTitleContains(userId, postTitle);
+    public Page<Post> findAllByUserIdAndTitle(Integer userId, String postTitle, Pageable pageable) {
+        return postRepository.findAllByUserData_IdAndTitleContains(userId, postTitle, pageable);
+    }
+
+    @Override
+    public List<Post> findAll(){
+        return postRepository.findAll();
     }
 }
