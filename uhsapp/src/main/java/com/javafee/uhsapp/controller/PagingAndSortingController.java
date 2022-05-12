@@ -1,4 +1,4 @@
-package com.javafee.uhsapp.controller.web;
+package com.javafee.uhsapp.controller;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.javafee.uhsapp.controller.web;
+package com.javafee.uhsapp.controller;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;

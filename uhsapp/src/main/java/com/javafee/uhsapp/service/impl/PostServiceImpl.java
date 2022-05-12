@@ -35,6 +35,7 @@ public class PostServiceImpl implements PostService {
                         .userData(post.getUserData())
                         .category(post.getCategory())
                         .creationDate(new Timestamp(System.currentTimeMillis()))
+                        .type(post.getType())
                         .description(post.getDescription())
                         .shortDescription(post.getShortDescription())
                         .address(post.getAddress())
@@ -66,4 +67,10 @@ public class PostServiceImpl implements PostService {
     public List<Post> findAll(){
         return postRepository.findAll();
     }
+
+    @Override
+    public Page<Post> findAll(Pageable pageable) {
+        return postRepository.findAll(pageable);
+    }
+
 }

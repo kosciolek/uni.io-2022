@@ -1,4 +1,4 @@
-package com.javafee.uhsapp.controller.web;
+package com.javafee.uhsapp.controller;
 
 import java.util.List;
 import java.util.Map;
@@ -19,11 +19,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.javafee.uhsapp.model.domain.Category;
 import com.javafee.uhsapp.model.domain.Post;
-import com.javafee.uhsapp.model.repository.PostRepository;
+import com.javafee.uhsapp.model.domain.PostType;
 import com.javafee.uhsapp.service.PostService;
 
 import lombok.RequiredArgsConstructor;
@@ -33,11 +35,32 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/postService")
 public class PostController extends PagingAndSortingController {
 	private final PostService postService;
-	private final PostRepository postRepository;
 
 	@GetMapping("/getPosts")
 	public List<Post> getAllPosts() {
 		return postService.findAll();
+	}
+
+	@GetMapping("/getPosts/{page}/{size}/{sortBy}")
+	public ResponseEntity findAll(@PathVariable int page, @PathVariable int size, @PathVariable String sortBy) {
+		try {
+			Page<Post> pageTuts = postService.findAll(PageRequest.of(page, size, Sort.by(sortBy)));
+			return !pageTuts.getContent().isEmpty() ? new ResponseEntity<>(prepareResponseMap(pageTuts), HttpStatus.OK)
+					: new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@GetMapping("/getPosts/{userId}/{postTitle}/{page}/{size}/{sortBy}")
+	public ResponseEntity findAll(@PathVariable Integer userId, @PathVariable String postTitle, @PathVariable int page, @PathVariable int size, @PathVariable String sortBy) {
+		try {
+			Page<Post> pageTuts = postService.findAllByUserIdAndTitle(userId, postTitle, PageRequest.of(page, size, Sort.by(sortBy)));
+			return !pageTuts.getContent().isEmpty() ? new ResponseEntity<>(prepareResponseMap(pageTuts), HttpStatus.OK)
+					: new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@PostMapping("/save")
@@ -58,6 +81,13 @@ public class PostController extends PagingAndSortingController {
 		return "post didnt deleted";
 	}
 
+
+
+	@GetMapping("/filter")
+	public ResponseEntity findAll(@RequestParam List<PostType> postType, @RequestParam boolean status, @RequestParam List<Category> category) {
+		return ResponseEntity.ok(postService.findAll());
+	}
+
 	@ResponseBody
 	@PostMapping("/userinfo")
 	public String oauthUserInfo(@RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient,
@@ -76,16 +106,4 @@ public class PostController extends PagingAndSortingController {
 		}
 		return acc + "</div>";
 	}
-
-    @GetMapping("/getPosts/{userId}/{postTitle}/{page}/{size}/{sortBy}")
-	public ResponseEntity findAll(@PathVariable Integer userId, @PathVariable String postTitle, @PathVariable int page, @PathVariable int size, @PathVariable String sortBy) {
-		try {
-			Page<Post> pageTuts = postService.findAllByUserIdAndTitle(userId, postTitle, PageRequest.of(page, size, Sort.by(sortBy)));
-			return !pageTuts.getContent().isEmpty() ? new ResponseEntity<>(prepareResponseMap(pageTuts), HttpStatus.OK)
-					: new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
 }

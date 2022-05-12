@@ -13,6 +13,8 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 
 //	List<Post> findAllByUserData_IdAndTitleContains(Integer userId, String postTitle);
 
+	Page<Post> findAll(Pageable pageable);
+
 	Page<Post> findAllByUserData_Id(Integer userId, Pageable pageable);
 
 	Page<Post> findAllByUserData_IdAndTitleContains(Integer userId, String postTile, Pageable pageable);

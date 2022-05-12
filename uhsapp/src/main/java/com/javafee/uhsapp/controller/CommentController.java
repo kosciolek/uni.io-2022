@@ -1,4 +1,4 @@
-package com.javafee.uhsapp.controller.web;
+package com.javafee.uhsapp.controller;
 
 import com.javafee.uhsapp.model.domain.Comment;
 import com.javafee.uhsapp.model.domain.UserData;
@@ -20,7 +20,6 @@ import java.util.List;
 public class CommentController {
     private final CommentService commentService;
     private final UserDataRepository userDataRepository;
-    private final PostRepository postRepository;
 
     @GetMapping("/getAllComments/{postId}")
     public List<Comment> getAllComments(@PathVariable("postId") Integer postId){
@@ -37,5 +36,4 @@ public class CommentController {
         commentService.save(comment, postId);
         return "comment created";
     }
-
 }

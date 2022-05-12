@@ -20,7 +20,7 @@ spring:
           auth0:
             domain: 'dev-qmx75p4q.us.auth0.com'
             client-id: 'sp9HNjFBFx3t1W726pTiVLMKq0ZHZP1T'
-            client-secret: 'x8W8R5CSJiCZICfy2aQe_frJ6lVNlsvUAjlptJaean7yWcVUoYfyndFbLsSLdhPH'
+            client-secret: '******'
             scope:
               - openid
               - profile

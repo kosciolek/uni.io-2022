@@ -20,4 +20,6 @@ public interface PostService {
     Page<Post> findAllByUserIdAndTitle(Integer userId, String postTitle, Pageable pageable);
 
     List<Post> findAll();
+
+    Page<Post> findAll(Pageable pageable);
 }

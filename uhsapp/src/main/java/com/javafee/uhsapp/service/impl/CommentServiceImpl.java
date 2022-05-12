@@ -31,7 +31,7 @@ public class CommentServiceImpl implements CommentService {
                         .post(comment.getPost())
                         .author(comment.getUserData().getName())
                         .body(comment.getBody())
-                        .timestamp(new Timestamp(System.currentTimeMillis()))
+                        .date(new Timestamp(System.currentTimeMillis()))
                         .build());
     }
 }

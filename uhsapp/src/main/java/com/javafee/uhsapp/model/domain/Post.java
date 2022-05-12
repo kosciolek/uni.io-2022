@@ -21,6 +21,7 @@ public class Post {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String author;
+	@NotNull
 	private Category category;
 	@NotNull
 	@Column(name = "phone_number")
@@ -30,6 +31,7 @@ public class Post {
 	private String address;
 	@NotNull
 	private String title;
+	@NotNull
 	private PostType type;
 	private boolean finished;
 	@Column(name = "creation_date")
@@ -39,6 +41,7 @@ public class Post {
 	@NotNull
 	@Column(name = "shortDescription")
 	private String shortDescription;
+	@NotNull
 	@Column(name = "end_date")
 	private Timestamp endDate;
 	@OneToMany(mappedBy = "post")

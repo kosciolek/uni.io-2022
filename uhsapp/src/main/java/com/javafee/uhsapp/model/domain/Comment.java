@@ -26,10 +26,9 @@ public class Comment {
     private Integer id;
     @NotNull
     private String body;
-    @NotNull
     private String author;
     @NotNull
-    private Timestamp timestamp;
+    private Timestamp date;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_post")

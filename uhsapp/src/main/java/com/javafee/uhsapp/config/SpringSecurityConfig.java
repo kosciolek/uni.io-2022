@@ -1,7 +1,7 @@
 package com.javafee.uhsapp.config;
 
 import com.javafee.uhsapp.config.oauth.CustomOidcUserService;
-import com.javafee.uhsapp.controller.web.LogoutHandler;
+import com.javafee.uhsapp.controller.LogoutHandler;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import javax.servlet.http.HttpServletRequest;
 
 @Data
 @Configuration
@@ -38,10 +37,5 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 				.logout()
 				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 				.addLogoutHandler(logoutHandler);
-	}
-
-	public String getContextPath(HttpServletRequest request) {
-		String path = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-		return path;
 	}
 }
