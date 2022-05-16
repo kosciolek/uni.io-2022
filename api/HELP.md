@@ -1,4 +1,11 @@
-# Getting Started
+## Docker usage
+To build and run API use command:
+
+```bash
+docker-compose -f humanitarius-api.yml up --build
+```
+
+## Java tutorials
 
 ### Reference Documentation
 For further reference, please consider the following sections:
