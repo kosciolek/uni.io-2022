@@ -19,15 +19,15 @@ spring:
       client:
         registration:
           auth0:
-            domain: 'dev-qmx75p4q.us.auth0.com'
-            client-id: 'sp9HNjFBFx3t1W726pTiVLMKq0ZHZP1T'
-            client-secret: '******'
+            domain: 'dev--ha3l5ql.us.auth0.com'
+            client-id: 'HJGUEHnIb15zwigz4GeteOTAvb6OZuTn'
+            client-secret: 'gmnFKp5cpKsDYTSEOrSe6_dkxy9dIdP5Kxm2cLY9Z86ZIpY-ZFMERJTtKHJMArY-'
             scope:
               - openid
               - profile
               - email
         provider:
           auth0:
-            issuer-uri: https://dev-qmx75p4q.us.auth0.com/
+            issuer-uri: 'https://dev--ha3l5ql.us.auth0.com/'
   api-docs:
     enabled: true
