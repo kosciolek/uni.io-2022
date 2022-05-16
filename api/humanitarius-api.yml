@@ -1,0 +1,31 @@
+version: "3.9"
+
+# Environment variables:
+# API_PORT
+# DB_USERNAME
+# DB_PASSWORD
+
+services:
+  api:
+    environment:
+      - SERVER_PORT=${API_PORT:-3000}
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL:-jdbc:postgresql://db:5432/humanitarius-db}
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME:-admin}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD:-secret123!}
+    container_name: humanitarius-api
+    build:
+      dockerfile: humanitarius-webserver.Dockerfile
+      context: .
+    depends_on:
+      - "db"
+    ports:
+      - "${API_PORT:-3000}:${API_PORT:-3000}"
+  db:
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_USER=${DB_USERNAME:-admin}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-secret123!}
+      - POSTGRES_DB=humanitarius-db
+    container_name: humanitarius-database
+    ports:
+      - "5432:5432"
