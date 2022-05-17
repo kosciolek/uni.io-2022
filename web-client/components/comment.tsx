@@ -1,22 +1,41 @@
+import { useUser } from "@auth0/nextjs-auth0";
 import { Stack, Typography } from "@mui/material";
-import React from "react";
+import { formatDistanceToNow } from "date-fns";
+import { pl } from "date-fns/locale";
+import React, { useMemo } from "react";
 
 export interface CommentProps {
   id: number;
-  author: string;
-  date: number;
+  authorNickname: string;
+  creationDate: string;
   body: string;
 }
 
-export const Comment: React.FC<CommentProps> = ({ id, author, date, body }) => {
+export const Comment: React.FC<CommentProps> = ({
+  id,
+  authorNickname,
+  creationDate,
+  body,
+}) => {
+  const timeAgo = useMemo(
+    () =>
+      formatDistanceToNow(new Date(creationDate), {
+        includeSeconds: false,
+        addSuffix: true,
+        locale: pl,
+      }),
+    [creationDate]
+  );
+
   return (
     <Stack spacing={0.5}>
       <Stack spacing={1} direction="row">
         <Typography variant="body2">
-          <b>{author}</b>
+          <b>{authorNickname}</b>
         </Typography>
-        <Typography variant="body2">
-          {new Date(date).toLocaleString()}
+
+        <Typography color="secondary" variant="body2">
+          {timeAgo}
         </Typography>
       </Stack>
       <div>

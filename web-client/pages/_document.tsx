@@ -5,8 +5,9 @@ export default function Document() {
     <Html>
       <Head>
         <link
+          href="https://allfont.net/allfont.css?fonts=comic-sans-ms"
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+          type="text/css"
         />
       </Head>
       <body>

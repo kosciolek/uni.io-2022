@@ -11,15 +11,19 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import type { NextPage } from "next";
+import Head from "next/head";
+import type { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
-import { useQuery } from "react-query";
+import { dehydrate, QueryClient, useQuery } from "react-query";
 import { red } from "@mui/material/colors";
 import { api } from "../api";
 import { Category, GetPostsResponse } from "../dto/types";
-import { formatCategory } from "../utils";
+import { formatCategory, getCategoryImage, removeNullish } from "../utils";
 import { Layout } from "../components/layout";
 import { Filters } from "../components/filters";
+import { getSession } from "@auth0/nextjs-auth0";
+import { useEffect, useState } from "react";
+import { useDebounce } from "use-debounce";
 
 export interface PostProps {
   id: number;
@@ -27,12 +31,25 @@ export interface PostProps {
   author: string;
   body: string;
   category: Category;
+  verified: boolean;
 }
 
-const Post = ({ id, title, author, body, category }: PostProps) => (
+const Post = ({ id, title, author, body, category, verified }: PostProps) => (
   <Card>
+    {verified && (
+      <Box
+        sx={(theme) => ({ backgroundColor: theme.palette.primary.light })}
+        color="white"
+        px={1}
+        py={0.5}
+      >
+        <Typography variant="caption">Zweryfikowane</Typography>
+      </Box>
+    )}
     <CardHeader
-      avatar={<Avatar sx={{ bgcolor: red[500] }}>{author[0]}</Avatar>}
+      avatar={
+        <Avatar src={getCategoryImage(category)} sx={{ bgcolor: red[500] }} />
+      }
       title={title}
       subheader={`${author} • ${formatCategory(category)}`}
     />
@@ -42,7 +59,7 @@ const Post = ({ id, title, author, body, category }: PostProps) => (
       </Typography>
     </CardContent>
     <CardActions disableSpacing>
-      <Link href={`/post/${id}`} passHref>
+      <Link href={`/posts/${id}`} passHref>
         <Button sx={{ marginLeft: "auto" }}>Więcej...</Button>
       </Link>
     </CardActions>
@@ -50,35 +67,68 @@ const Post = ({ id, title, author, body, category }: PostProps) => (
 );
 
 const Home: NextPage = () => {
-  const { data } = useQuery("post", () =>
-    api.get("post").json<GetPostsResponse>()
+  const [filters, setFilters] = useState<Filters>({});
+  const [debouncedFilters] = useDebounce(filters, 500);
+
+  const { data, refetch } = useQuery(
+    ["posts", debouncedFilters],
+    () =>
+      api
+        .get("posts", {
+          searchParams: removeNullish({
+            title: debouncedFilters.title,
+          }) as any,
+        })
+        .json<GetPostsResponse>(),
+    {
+      keepPreviousData: true,
+    }
   );
 
   return (
-    <Layout>
-      <Stack spacing={2}>
-        <div>
-          <Filters />
-        </div>
-        <div>
-          <Grid container spacing={3}>
-            {data?.map((post) => (
-              <Grid item sm={12} md={6} lg={4} key={post.id}>
-                <Post
-                  id={post.id}
-                  author={post.author}
-                  category={post.category}
-                  body={post.shortDescription}
-                  title={post.title}
-                />
-              </Grid>
-            ))}
-          </Grid>
-        </div>
-        <Box py={10}>{JSON.stringify(data, null, 2)}</Box>
-      </Stack>
-    </Layout>
+    <>
+      <Head>
+        <title>Ogłoszenia i wolontariat</title>
+      </Head>
+      <Layout>
+        <Stack spacing={2}>
+          <div>
+            <Filters filters={filters} onChange={setFilters} />
+          </div>
+          <div>
+            <Grid container spacing={3}>
+              {data?.map((post) => (
+                <Grid item sm={12} md={6} lg={4} key={post.id}>
+                  <Post
+                    id={post.id}
+                    author={post.authorNickname}
+                    category={post.category}
+                    body={post.shortDescription}
+                    title={post.title}
+                    verified={post.verified}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          </div>
+        </Stack>
+      </Layout>
+    </>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const queryClient = new QueryClient();
+
+  queryClient.prefetchQuery(["posts", {}], () =>
+    api.get("posts").json<GetPostsResponse>()
+  );
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
 };
 
 export default Home;

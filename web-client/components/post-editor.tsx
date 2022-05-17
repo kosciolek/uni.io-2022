@@ -26,6 +26,7 @@ export const PostEditor: React.FC<PostEditorProps> = ({}) => {
     <Slate editor={editor} value={initialValue}>
       <Editable
         renderLeaf={renderLeaf}
+        
         onKeyDown={(event) => {
           if (!event.ctrlKey) {
             return;

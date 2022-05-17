@@ -4,6 +4,7 @@ import {
   Button,
   Checkbox,
   Collapse,
+  Divider,
   FormControl,
   FormControlLabel,
   FormGroup,
@@ -13,11 +14,25 @@ import {
   TextField,
 } from "@mui/material";
 import { useState } from "react";
+import { removeNullish } from "../utils";
 
-export interface FiltersProps {}
+export interface Filters {
+  title?: string;
+}
 
-export const Filters: React.FC<FiltersProps> = ({}) => {
+export interface FiltersProps {
+  filters: Filters;
+  onChange?: (filters: Filters) => void;
+}
+
+export const Filters: React.FC<FiltersProps> = ({
+  filters,
+  onChange: onChangeProp,
+}) => {
   const [filtersOpen, setFiltersOpen] = useState(false);
+
+  const onChange = (newFilters: Filters) =>
+    onChangeProp?.(removeNullish(newFilters as any));
 
   return (
     <div>
@@ -30,6 +45,16 @@ export const Filters: React.FC<FiltersProps> = ({}) => {
         </Button>
       </Box>
       <Collapse in={filtersOpen} unmountOnExit timeout="auto">
+        <div>
+          <TextField
+            label="Tytuł ogłoszenia"
+            variant="standard"
+            placeholder="Lekcje gotowania"
+            value={filters.title}
+            onChange={(e) => onChange({ ...filters, title: e.target.value })}
+          />
+        </div>
+
         <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
           <FormLabel component="legend">Typ ogłoszenia</FormLabel>
           <FormGroup>
@@ -64,7 +89,7 @@ export const Filters: React.FC<FiltersProps> = ({}) => {
               label="Żywność"
             />
             <FormControlLabel
-              control={<Checkbox name="accomodation" />}
+              control={<Checkbox name="accommodation" />}
               label="Mieszkanie"
             />
             <FormControlLabel
@@ -73,9 +98,8 @@ export const Filters: React.FC<FiltersProps> = ({}) => {
             />
           </FormGroup>
         </FormControl>
-        <div>
-          <TextField label="Tytuł ogłoszenia" placeholder="Lekcje gotowania" />
-        </div>
+
+        <Divider />
       </Collapse>
     </div>
   );
