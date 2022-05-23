@@ -27,11 +27,9 @@ public class CommentController {
 
     @PostMapping("/createComment/{postId}")
     public String createCommentRequest(@RequestBody Comment comment,
-                                       @PathVariable("postId") Integer postId,
-                                       @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient,
-                                       @AuthenticationPrincipal OAuth2User oauth2User){
-        UserData user = userDataRepository.findByLogin(oauth2User.getAttributes().get("email").toString());
-        comment.setUserData(user);
+                                       @PathVariable("postId") Integer postId){
+//        UserData user = userDataRepository.findByLogin(oauth2User.getAttributes().get("email").toString());
+//        comment.setUserData(user);
         commentService.save(comment, postId);
         return "comment created";
     }

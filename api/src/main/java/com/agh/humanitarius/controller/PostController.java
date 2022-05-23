@@ -16,6 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -64,20 +65,18 @@ public class PostController extends PagingAndSortingController {
 	}
 
 	@PostMapping("/save")
-	public String save(@RequestBody @Valid Post post, @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient,
-	                   @AuthenticationPrincipal OAuth2User oauth2User) {
-		postService.save(post, oauth2User.getAttributes().get("email").toString());
-		// TODO: handle redirect or sth
+	public String save(@RequestBody @Valid Post post) {
+//		postService.save(post, oauth2User.getAttributes().get("email").toString());
+//		// TODO: handle redirect or sth
 		return "post created";
 	}
 
-	@PostMapping("/delete/{postId}")
-	public String delete(@PathVariable("postId") Integer postId, @RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient,
-	                     @AuthenticationPrincipal OAuth2User oauth2User) {
-		if (oauth2User.getAttributes().get("email").toString().equals(postService.getById(postId).getUserData().getLogin())) {
-			postService.delete(postId);
-			return "post deleted";
-		}
+	@DeleteMapping("/{postId}")
+	public String delete(@PathVariable("postId") Integer postId) {
+//		if (oauth2User.getAttributes().get("email").toString().equals(postService.getById(postId).getUserData().getLogin())) {
+//			postService.delete(postId);
+//			return "post deleted";
+//		}
 		return "post didnt deleted";
 	}
 
@@ -88,22 +87,22 @@ public class PostController extends PagingAndSortingController {
 		return ResponseEntity.ok(postService.findAll());
 	}
 
-	@ResponseBody
-	@PostMapping("/userinfo")
-	public String oauthUserInfo(@RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient,
-	                            @AuthenticationPrincipal OAuth2User oauth2User) {
-		return "User Name: " + oauth2User.getName() + "<br/>" +
-				"User Authorities: " + oauth2User.getAuthorities() + "<br/>" +
-				"Client Name: " + authorizedClient.getClientRegistration().getClientId() + "<br/>" +
-				this.prettyPrintAttributes(oauth2User.getAttributes());
-	}
-
-	private String prettyPrintAttributes(Map<String, Object> attributes) {
-		String acc = "User Attributes: <br/><div style='padding-left:20px'>";
-		for (String key : attributes.keySet()) {
-			Object value = attributes.get(key);
-			acc += "<div>" + key + ":&nbsp" + value.toString() + "</div>";
-		}
-		return acc + "</div>";
-	}
+//	@ResponseBody
+//	@PostMapping("/userinfo")
+//	public String oauthUserInfo(@RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient,
+//	                            @AuthenticationPrincipal OAuth2User oauth2User) {
+//		return "User Name: " + oauth2User.getName() + "<br/>" +
+//				"User Authorities: " + oauth2User.getAuthorities() + "<br/>" +
+//				"Client Name: " + authorizedClient.getClientRegistration().getClientId() + "<br/>" +
+//				this.prettyPrintAttributes(oauth2User.getAttributes());
+//	}
+//
+//	private String prettyPrintAttributes(Map<String, Object> attributes) {
+//		String acc = "User Attributes: <br/><div style='padding-left:20px'>";
+//		for (String key : attributes.keySet()) {
+//			Object value = attributes.get(key);
+//			acc += "<div>" + key + ":&nbsp" + value.toString() + "</div>";
+//		}
+//		return acc + "</div>";
+//	}
 }
