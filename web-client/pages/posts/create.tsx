@@ -22,6 +22,7 @@ import { PostEditor } from "../../components/post-editor";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { removeNullish } from "../../utils";
+import { Descendant } from "slate";
 
 export default function AddPostPage() {
   const router = useRouter();
@@ -35,6 +36,7 @@ export default function AddPostPage() {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
+  const [description, setDescription] = useState<Descendant[]>();
 
   const mutation = useMutation(
     () =>
@@ -49,7 +51,7 @@ export default function AddPostPage() {
             phone,
             email,
             address,
-            description: "Dlugi opis123",
+            description: JSON.stringify(description),
           }),
         })
         .json(),
@@ -182,7 +184,8 @@ export default function AddPostPage() {
               value={shortDescription}
               onChange={(e) => setShortDescription(e.target.value)}
             />
-            <PostEditor />
+            <Divider />
+            <PostEditor onChange={setDescription} />
             <Box display="flex" justifyContent="end">
               <Stack spacing={2} alignItems="end">
                 <Button

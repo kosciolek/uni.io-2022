@@ -38,7 +38,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           borderWidth: "0 4px",
           borderStyle: "dotted",
           borderColor: theme.palette.primary.light,
-          height: "100vh",
+          minHeight: "100vh",
         })}
       >
         <Box
@@ -80,7 +80,10 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               )}
               {user?.nickname && <Typography>{user.name}</Typography>}
             </Stack>
-            <Button href="/posts/create" color="primary">
+            <Button
+              href={user ? "/posts/create" : "/api/auth/login"}
+              color="primary"
+            >
               Dodaj
             </Button>
             {authButton}
@@ -88,6 +91,11 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         </Box>
 
         <Box mt={2}>{children}</Box>
+        <Box p={2} display="flex" justifyContent="center">
+          <Typography color="gray" variant="body2">
+            Humanitarius © {new Date().getFullYear()}
+          </Typography>
+        </Box>
       </Container>
     </>
   );

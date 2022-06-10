@@ -10,6 +10,7 @@ import {
   Grid,
   Stack,
   Typography,
+  Pagination,
 } from "@mui/material";
 import Head from "next/head";
 import type { GetServerSideProps, NextPage } from "next";
@@ -21,9 +22,9 @@ import { Category, GetPostsResponse } from "../dto/types";
 import { formatCategory, getCategoryImage, removeNullish } from "../utils";
 import { Layout } from "../components/layout";
 import { Filters } from "../components/filters";
-import { getSession } from "@auth0/nextjs-auth0";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "use-debounce";
+import { Welcome } from "../components/welcome";
 
 export interface PostProps {
   id: number;
@@ -33,6 +34,8 @@ export interface PostProps {
   category: Category;
   verified: boolean;
 }
+
+const POSTS_PER_PAGE = 12;
 
 const Post = ({ id, title, author, body, category, verified }: PostProps) => (
   <Card>
@@ -48,7 +51,10 @@ const Post = ({ id, title, author, body, category, verified }: PostProps) => (
     )}
     <CardHeader
       avatar={
-        <Avatar src={getCategoryImage(category)} sx={{ bgcolor: red[500] }} />
+        <Avatar
+          sx={{ bgColor: "transparent", borderRadius: 0 }}
+          src={getCategoryImage(category)}
+        />
       }
       title={title}
       subheader={`${author} • ${formatCategory(category)}`}
@@ -67,16 +73,26 @@ const Post = ({ id, title, author, body, category, verified }: PostProps) => (
 );
 
 const Home: NextPage = () => {
-  const [filters, setFilters] = useState<Filters>({});
+  const [filters, setFilters] = useState<Filters>({
+    includeFinished: false,
+    verifiedOnly: false,
+    categories: ["accommodation", "food", "misc"],
+    postType: ["needs", "offers"],
+  });
   const [debouncedFilters] = useDebounce(filters, 500);
 
-  const { data, refetch } = useQuery(
+  const { data } = useQuery(
     ["posts", debouncedFilters],
     () =>
       api
         .get("posts", {
           searchParams: removeNullish({
             title: debouncedFilters.title,
+            includeFinished: debouncedFilters.includeFinished,
+            verifiedOnly: debouncedFilters.verifiedOnly,
+            authorPartial: debouncedFilters.author,
+            categories: debouncedFilters.categories?.join(","),
+            postType: debouncedFilters.postType?.join(","),
           }) as any,
         })
         .json<GetPostsResponse>(),
@@ -85,19 +101,31 @@ const Home: NextPage = () => {
     }
   );
 
+  const [page, setPage] = useState(1);
+  const pages = data ? Math.ceil(data.length / POSTS_PER_PAGE) : 1;
+
+  const startIndex = POSTS_PER_PAGE * (page - 1);
+  const endIndex = startIndex + POSTS_PER_PAGE;
+
+  const paginatedPosts = useMemo(
+    () => data?.slice(startIndex, endIndex),
+    [data, startIndex, endIndex]
+  );
+
   return (
     <>
       <Head>
         <title>Ogłoszenia i wolontariat</title>
       </Head>
       <Layout>
-        <Stack spacing={2}>
+        <Welcome />
+        <Stack spacing={2} id="ads">
           <div>
             <Filters filters={filters} onChange={setFilters} />
           </div>
           <div>
             <Grid container spacing={3}>
-              {data?.map((post) => (
+              {paginatedPosts?.map((post) => (
                 <Grid item sm={12} md={6} lg={4} key={post.id}>
                   <Post
                     id={post.id}
@@ -110,6 +138,14 @@ const Home: NextPage = () => {
                 </Grid>
               ))}
             </Grid>
+            <Box py={2} display="flex" justifyContent="center">
+              <Pagination
+                count={pages}
+                page={page}
+                onChange={(_, newPage) => setPage(newPage)}
+                color="primary"
+              />
+            </Box>
           </div>
         </Stack>
       </Layout>
@@ -120,7 +156,7 @@ const Home: NextPage = () => {
 export const getServerSideProps: GetServerSideProps = async () => {
   const queryClient = new QueryClient();
 
-  queryClient.prefetchQuery(["posts", {}], () =>
+  queryClient.prefetchQuery(["posts"], () =>
     api.get("posts").json<GetPostsResponse>()
   );
 

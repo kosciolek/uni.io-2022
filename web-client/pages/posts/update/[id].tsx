@@ -23,8 +23,15 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import { GetPostResponse, Post } from "../../../dto/types";
 import { removeNullish } from "../../../utils";
+import { Descendant } from "slate";
 
-export default function AddPostPage({ post }: { post: Post }) {
+export default function AddPostPage({
+  post,
+  postDescription,
+}: {
+  post: Post;
+  postDescription: any;
+}) {
   const router = useRouter();
 
   const queryClient = useQueryClient();
@@ -39,6 +46,7 @@ export default function AddPostPage({ post }: { post: Post }) {
   const [phone, setPhone] = useState(post.phone);
   const [email, setEmail] = useState(post.email);
   const [address, setAddress] = useState(post.address);
+  const [description, setDescription] = useState<Descendant[]>();
 
   const mutation = useMutation(
     () =>
@@ -49,7 +57,7 @@ export default function AddPostPage({ post }: { post: Post }) {
             category,
             type: postType,
             shortDescription,
-            description: "Dlugi opis123",
+            description: JSON.stringify(description),
             phone,
             email,
             address,
@@ -185,7 +193,11 @@ export default function AddPostPage({ post }: { post: Post }) {
               value={shortDescription}
               onChange={(e) => setShortDescription(e.target.value)}
             />
-            <PostEditor />
+            <Divider />
+            <PostEditor
+              initialValue={postDescription}
+              onChange={setDescription}
+            />
             <Box display="flex" justifyContent="end">
               <Stack spacing={2} alignItems="end">
                 <Button
@@ -219,9 +231,12 @@ export const getServerSideProps: GetServerSideProps = async ({
 
   const post = await api.get(`posts/${id}`).json<GetPostResponse>();
 
+  const postDescription = JSON.parse(post.description);
+
   return {
     props: {
       post,
+      postDescription,
     },
   };
 };

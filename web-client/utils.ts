@@ -14,7 +14,7 @@ export const formatPostType = (postType: PostType) =>
 const categoryImageMap: Record<Category, string> = {
   accommodation: "/accommodation.png",
   food: "/food.png",
-  misc: "/food.png",
+  misc: "/misc.png",
 };
 
 export const getCategoryImage = (category: Category) =>
