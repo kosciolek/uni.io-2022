@@ -2,8 +2,9 @@ const { PrismaClient } = require('@prisma/client');
 const { program } = require('commander');
 const chalk = require('chalk');
 
-const formatReport = ({ reporterId, reason, post }) =>
+const formatReport = ({ id, reporterId, reason, post }) =>
   `  ${chalk.red('Post ID')}: ${post.id}
+  ${chalk.red('Report ID')}: ${id}
   ${chalk.red('Reporter ID')}: ${reporterId}
   ${chalk.red('Report reason')}: ${reason}
   ${chalk.green('Title')}: ${post.title}
@@ -32,8 +33,10 @@ const main = async () => {
     },
   }); */
 
-  program
-    .command('view-reports')
+  const reports = program.command('reports');
+
+  reports
+    .command('view')
     .description('Allows to view reports and posts reported by users.')
     .action(async () => {
       const reports = await client.postReport.findMany({
@@ -47,6 +50,23 @@ const main = async () => {
       const separator = '\n--------------------\n';
       console.log(formatted.join(separator));
     });
+
+  reports
+    .command('delete')
+    .description('Allows to delete reports made by users.')
+    .requiredOption(
+      '-i, --id <reportId>',
+      'The id of the report to be deleted.',
+    )
+    .action(async ({ id }) => {
+      await client.postReport.delete({
+        where: {
+          id: Number(id),
+        },
+      });
+    });
+
+  console.log(chalk.yellow('Deleted.'));
 
   program.parse();
 };
