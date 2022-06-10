@@ -53,7 +53,6 @@ export const Filters: React.FC<FiltersProps> = ({
       });
   };
 
-  console.log(filters.postType?.includes("needs") ?? false);
   const handlePostTypeChange = (
     postType: "needs" | "offers",
     newValue: boolean

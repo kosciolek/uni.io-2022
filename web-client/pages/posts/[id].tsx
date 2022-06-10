@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import Link from "next/link";
 import { GetServerSideProps } from "next";
 import { dehydrate, QueryClient, useQuery } from "react-query";
@@ -15,7 +16,16 @@ import {
 import Head from "next/head";
 import { formatDistanceToNow } from "date-fns";
 import { pl } from "date-fns/locale";
-import { LocalPhone, Event, Category, Person, Edit } from "@mui/icons-material";
+import {
+  LocalPhone,
+  Event,
+  Category,
+  Person,
+  Edit,
+  Home,
+  AttachEmail,
+  CheckCircleOutline,
+} from "@mui/icons-material";
 import { GetPostResponse } from "../../dto/types";
 import { formatCategory, formatPostType } from "../../utils";
 import { Layout } from "../../components/layout";
@@ -24,7 +34,13 @@ import { CommentSection } from "../../components/comment-section";
 import { useUser } from "@auth0/nextjs-auth0";
 import { ReportDialog } from "../../components/report-dialog";
 
-export default function PostPage({ id }: { id: number }) {
+export default function PostPage({
+  id,
+  postDescription,
+}: {
+  id: number;
+  postDescription: any;
+}) {
   const { data: post } = useQuery(["posts", id], () =>
     api.get(`posts/${id}`).json<GetPostResponse>()
   );
@@ -77,8 +93,7 @@ export default function PostPage({ id }: { id: number }) {
             <Box my={3}>
               <Divider />
             </Box>
-            <PostEditor />
-            {post.description}
+            <PostEditor readOnly initialValue={postDescription} />
             <Box my={3}>
               <CommentSection postId={post.id} comments={post.comments} />
             </Box>
@@ -129,7 +144,7 @@ export default function PostPage({ id }: { id: number }) {
               <Divider />
               <div>
                 <Stack direction="row" spacing={0.5} mb={0.5}>
-                  <LocalPhone color="primary" fontSize="small" />
+                  <CheckCircleOutline color="primary" fontSize="small" />
                   <Typography color="primary" variant="body2" gutterBottom>
                     <b>Status</b>
                   </Typography>
@@ -174,7 +189,7 @@ export default function PostPage({ id }: { id: number }) {
                 <>
                   <div>
                     <Stack direction="row" spacing={0.5} mb={0.5}>
-                      <LocalPhone color="primary" fontSize="small" />
+                      <Home color="primary" fontSize="small" />
                       <Typography color="primary" variant="body2" gutterBottom>
                         <b>Adres</b>
                       </Typography>
@@ -187,7 +202,7 @@ export default function PostPage({ id }: { id: number }) {
               {post.email && (
                 <div>
                   <Stack direction="row" spacing={0.5} mb={0.5}>
-                    <LocalPhone color="primary" fontSize="small" />
+                    <AttachEmail color="primary" fontSize="small" />
                     <Typography color="primary" variant="body2" gutterBottom>
                       <b>Email</b>
                     </Typography>
@@ -222,11 +237,15 @@ export const getServerSideProps: GetServerSideProps<
   if (isNaN(id)) throw new Error("Bad post id.");
 
   const client = new QueryClient();
-  await client.prefetchQuery(["posts", id], () =>
-    api.get(`posts/${id}`).json<GetPostResponse>()
-  );
+  const post = await api.get(`posts/${id}`).json<GetPostResponse>();
+
+  client.setQueryData(["posts", id], post);
 
   return {
-    props: { dehydratedState: dehydrate(client), id },
+    props: {
+      dehydratedState: dehydrate(client),
+      id,
+      postDescription: JSON.parse(post.description),
+    },
   };
 };
