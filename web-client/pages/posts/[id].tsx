@@ -150,7 +150,7 @@ export default function PostPage({
                   </Typography>
                 </Stack>
                 <Typography>
-                  {post.finished ? "Aktywne" : "Zakończone"}
+                  {!post.finished ? "Aktywne" : "Zakończone"}
                 </Typography>
               </div>
               <Divider />
