@@ -83,7 +83,7 @@ export default function PostPage({ id }: { id: number }) {
               <CommentSection postId={post.id} comments={post.comments} />
             </Box>
           </Grid>
-          <Grid item lg={4}>
+          <Grid item sm={12} lg={4}>
             <Stack spacing={2}>
               {post.verified && (
                 <Box

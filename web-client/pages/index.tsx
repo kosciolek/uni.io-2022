@@ -35,7 +35,7 @@ export interface PostProps {
   verified: boolean;
 }
 
-const POSTS_PER_PAGE = 8;
+const POSTS_PER_PAGE = 12;
 
 const Post = ({ id, title, author, body, category, verified }: PostProps) => (
   <Card>
@@ -51,7 +51,10 @@ const Post = ({ id, title, author, body, category, verified }: PostProps) => (
     )}
     <CardHeader
       avatar={
-        <Avatar src={getCategoryImage(category)} sx={{ bgcolor: red[500] }} />
+        <Avatar
+          sx={{ bgColor: "transparent", borderRadius: 0 }}
+          src={getCategoryImage(category)}
+        />
       }
       title={title}
       subheader={`${author} • ${formatCategory(category)}`}
@@ -73,10 +76,12 @@ const Home: NextPage = () => {
   const [filters, setFilters] = useState<Filters>({
     includeFinished: false,
     verifiedOnly: false,
+    categories: ["accommodation", "food", "misc"],
+    postType: ["needs", "offers"],
   });
   const [debouncedFilters] = useDebounce(filters, 500);
 
-  const { data, refetch } = useQuery(
+  const { data } = useQuery(
     ["posts", debouncedFilters],
     () =>
       api
@@ -85,6 +90,9 @@ const Home: NextPage = () => {
             title: debouncedFilters.title,
             includeFinished: debouncedFilters.includeFinished,
             verifiedOnly: debouncedFilters.verifiedOnly,
+            authorPartial: debouncedFilters.author,
+            categories: debouncedFilters.categories?.join(","),
+            postType: debouncedFilters.postType?.join(","),
           }) as any,
         })
         .json<GetPostsResponse>(),
