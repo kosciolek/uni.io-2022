@@ -64,9 +64,9 @@ const main = async () => {
           id: Number(id),
         },
       });
-    });
 
-  console.log(chalk.yellow('Deleted.'));
+      console.log(chalk.yellow('Deleted.'));
+    });
 
   program.parse();
 };
