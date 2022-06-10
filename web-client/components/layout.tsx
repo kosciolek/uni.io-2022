@@ -80,7 +80,10 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               )}
               {user?.nickname && <Typography>{user.name}</Typography>}
             </Stack>
-            <Button href="/posts/create" color="primary">
+            <Button
+              href={user ? "/posts/create" : "/api/auth/login"}
+              color="primary"
+            >
               Dodaj
             </Button>
             {authButton}

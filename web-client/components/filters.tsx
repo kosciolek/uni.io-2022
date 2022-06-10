@@ -18,6 +18,8 @@ import { removeNullish } from "../utils";
 
 export interface Filters {
   title?: string;
+  includeFinished?: boolean;
+  verifiedOnly?: boolean;
 }
 
 export interface FiltersProps {
@@ -36,7 +38,7 @@ export const Filters: React.FC<FiltersProps> = ({
 
   return (
     <div>
-      <Box display="flex" justifyContent="end">
+      <Box>
         <Button
           startIcon={<FilterList />}
           onClick={() => setFiltersOpen((prev) => !prev)}
@@ -72,12 +74,25 @@ export const Filters: React.FC<FiltersProps> = ({
           <FormLabel component="legend">Status ogłoszenia</FormLabel>
           <FormGroup>
             <FormControlLabel
-              control={<Checkbox name="open" />}
-              label="Aktywne"
+              value={filters.includeFinished ?? false}
+              onChange={(_, newValue) =>
+                onChange({ ...filters, includeFinished: newValue })
+              }
+              control={<Checkbox name="include-finished" />}
+              label="Pokazuj zakończone"
             />
+          </FormGroup>
+        </FormControl>
+        <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
+          <FormLabel component="legend">Weryfikacja</FormLabel>
+          <FormGroup>
             <FormControlLabel
-              control={<Checkbox name="finished" />}
-              label="Zamknięte"
+              value={filters.verifiedOnly ?? false}
+              onChange={(_, newValue) =>
+                onChange({ ...filters, verifiedOnly: newValue })
+              }
+              control={<Checkbox name="verified-only" />}
+              label="Tylko zweryfikowane"
             />
           </FormGroup>
         </FormControl>

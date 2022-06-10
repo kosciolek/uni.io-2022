@@ -8,17 +8,17 @@ export interface CommentSectionProps {
   comments: CommentProps[];
 }
 
-const POSTS_PER_PAGE = 8;
+const COMMENTS_PER_PAGE = 8;
 
 export const CommentSection: React.FC<CommentSectionProps> = ({
   postId,
   comments,
 }) => {
   const [page, setPage] = useState(1);
-  const pages = Math.ceil(comments.length / POSTS_PER_PAGE);
+  const pages = Math.ceil(comments.length / COMMENTS_PER_PAGE);
 
-  const startIndex = POSTS_PER_PAGE * (page - 1);
-  const endIndex = startIndex + POSTS_PER_PAGE;
+  const startIndex = COMMENTS_PER_PAGE * (page - 1);
+  const endIndex = startIndex + COMMENTS_PER_PAGE;
 
   return (
     <>
