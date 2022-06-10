@@ -15,7 +15,7 @@ sidebar_position: 5
 W przypadku modułów komunikujących się z bazą danych, przyjęto architekturę warstwową. Jej poszczególne komponenty to:
 - **dto** - reprezentują przekazywane dane
 - **service** - enkapsulują logikę obsługi bazy danych i zapytań
-- **controller** - konfigurują backendowy serwer i definiuje dostępne endpointy
+- **controller** - konfigurują backendowy serwer i definiują dostępne endpointy
 
 ### Komunikacja z bazą danych:
 W aplikacji zapytania nie są bezporśrednio wykonywane za pomocą języka SQL. Biblioteka **Prisma** oferuję API które abstrahuje konkretny dialekt silnika baz danych i znacząco ułatwia jego obsługę.
